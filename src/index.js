@@ -15,6 +15,8 @@ const refs = {
 refs.form.addEventListener('submit', onSubmitButtonClick);
 refs.loadButton.addEventListener('click', onSubmitButtonClick);
 
+refs.loadButton.classList.add('is-hidden');
+
 function onSubmitButtonClick(evt) {
   evt.preventDefault();
   const formInput = evt.currentTarget;
@@ -27,12 +29,14 @@ function onSubmitButtonClick(evt) {
         Notiflix.Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );
+        refs.form.reset();
       } else {
         const pictures = response.data.hits;
         refs.gallery.innerHTML = pictures
           .map(picture => createOneCardImage(picture))
           .join('');
         refs.loadButton.classList.remove('is-hidden');
+        refs.form.reset();
       }
     });
   }
