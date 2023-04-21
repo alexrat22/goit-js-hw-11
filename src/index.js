@@ -1,69 +1,56 @@
 import './css/styles.css';
+import axios from 'axios';
 //import Notiflix from 'notiflix';
+
+const APIKEY = '35639448-d856c19f58ebd88d37f926e40';
 
 const refs = {
   form: document.querySelector('.search-form'),
-  input: document.querySelector('input'),
+  gallery: document.querySelector('.gallery'),
 };
 
 refs.form.addEventListener('submit', onSubmitButtonClick);
 
 function onSubmitButtonClick(evt) {
   evt.preventDefault();
-  console.log(refs.input.value);
-  if (refs.input.value.trim() === '') {
+  const formInput = evt.currentTarget;
+  const searchQuery = formInput.searchQuery.value;
+  if (searchQuery.trim() === '') {
     return;
-    //   } else {
-    //     fetchCountries(refs.inputField.value.trim())
-    //       .then(response => {
-    //         if (response.length === 1) {
-    //           refs.countryList.innerHTML = '';
-    //           refs.oneCountryInfo.innerHTML = createOneCountryInfo(response[0]);
-    //         } else if (response.length > 10) {
-    //           Notiflix.Notify.info(
-    //             'Too many matches found. Please enter a more specific name.'
-    //           );
-    //           refs.countryList.innerHTML = '';
-    //           refs.oneCountryInfo.innerHTML = '';
-    //         } else {
-    //           refs.countryList.innerHTML = createCountries(response);
-    //           refs.oneCountryInfo.innerHTML = '';
-    //         }
-    //       })
-    //       .catch(error => {
-    //         Notiflix.Notify.failure('Oops, there is no country with that name');
-    //         refs.countryList.innerHTML = '';
-    //         refs.oneCountryInfo.innerHTML = '';
-    //       });
+  } else {
+    getPictures(searchQuery);
   }
 }
 
-// function createCountries(countries) {
-//   return countries
-//     .map(country => {
-//       return `<li class="country-flag-title">
-//     <img class="country-flag" src='${country.flags.svg}' alt="flag of ${country.flags.alt}" width=25/>
-//     ${country.name.official}
-//     </li>`;
-//     })
-//     .join('');
-// }
+async function getPictures(searchQuery) {
+  const responseData = await axios.get(
+    `https://pixabay.com/api/?key=${APIKEY}&q=${searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40`
+  );
+  const pictures = responseData.data.hits;
+  refs.gallery.innerHTML = pictures
+    .map(picture => createOneCardImage(picture))
+    .join('');
+}
 
-function createOneCardImage(card) {
+function createOneCardImage(picture) {
   return `<div class="photo-card">
-  <img src="" alt="" loading="lazy" />
+  <img class="one-photo" src= ${picture.webformatURL}  alt=${picture.tags} loading="lazy" width=300 height=200/>
   <div class="info">
     <p class="info-item">
       <b>Likes</b>
+       ${picture.likes}
     </p>
     <p class="info-item">
       <b>Views</b>
+      ${picture.views}
     </p>
     <p class="info-item">
       <b>Comments</b>
+      ${picture.comments}
     </p>
     <p class="info-item">
       <b>Downloads</b>
+      ${picture.downloads}
     </p>
   </div>
 </div>`;
