@@ -2,12 +2,13 @@ import './css/styles.css';
 import axios from 'axios';
 import Notiflix from 'notiflix';
 
-const APIKEY = '35639448-d856c19f58ebd88d37f926e40';
+const API_KEY = '35639448-d856c19f58ebd88d37f926e40';
 const perPage = 40;
 let page = 1;
 
 const refs = {
   form: document.querySelector('.search-form'),
+  input: document.querySelector('input'),
   gallery: document.querySelector('.gallery'),
   loadButton: document.querySelector('.load-more'),
 };
@@ -19,8 +20,7 @@ refs.loadButton.classList.add('is-hidden');
 
 function onSubmitButtonClick(evt) {
   evt.preventDefault();
-  const formInput = evt.currentTarget;
-  const searchQuery = formInput.searchQuery.value;
+  const searchQuery = refs.input.value;
   if (searchQuery.trim() === '') {
     return;
   } else {
@@ -29,14 +29,13 @@ function onSubmitButtonClick(evt) {
         Notiflix.Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );
-        refs.form.reset();
       } else {
         const pictures = response.data.hits;
         refs.gallery.innerHTML = pictures
           .map(picture => createOneCardImage(picture))
           .join('');
         refs.loadButton.classList.remove('is-hidden');
-        refs.form.reset();
+        page += 1;
       }
     });
   }
@@ -45,9 +44,8 @@ function onSubmitButtonClick(evt) {
 async function getPictures(searchQuery) {
   try {
     const response = await axios.get(
-      `https://pixabay.com/api/?key=${APIKEY}&q=${searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${perPage}&page=${page}`
+      `https://pixabay.com/api/?key=${API_KEY}&q=${searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${perPage}&page=${page}`
     );
-    console.log(response);
     return response;
   } catch (error) {
     console.log(error);
