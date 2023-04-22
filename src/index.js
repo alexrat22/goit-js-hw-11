@@ -31,9 +31,10 @@ function onSubmitButtonClick(evt) {
         );
       } else {
         const pictures = response.data.hits;
-        refs.gallery.innerHTML = pictures
+        const oneItem = pictures
           .map(picture => createOneCardImage(picture))
           .join('');
+        refs.gallery.insertAdjacentHTML('beforeend', oneItem);
         refs.loadButton.classList.remove('is-hidden');
         page += 1;
       }
