@@ -27,6 +27,7 @@ function onSubmitButtonClick(evt) {
   if (evt.currentTarget.id === 'search-form') {
     page = 1;
     refs.gallery.innerHTML = '';
+    refs.loadButton.classList.add('is-hidden');
   }
   const searchQuery = refs.input.value;
   if (searchQuery.trim() === '') {
