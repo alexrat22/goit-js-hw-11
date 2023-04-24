@@ -1,6 +1,8 @@
 import './css/styles.css';
 import axios from 'axios';
 import Notiflix from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const API_KEY = '35639448-d856c19f58ebd88d37f926e40';
 const perPage = 40;
@@ -20,6 +22,11 @@ refs.loadButton.classList.add('is-hidden');
 
 function onSubmitButtonClick(evt) {
   evt.preventDefault();
+  if (evt.currentTarget.id === 'search-form') {
+    page = 1;
+    refs.gallery.innerHTML = '';
+    refs.loadButton.classList.add('is-hidden');
+  }
   const searchQuery = refs.input.value;
   if (searchQuery.trim() === '') {
     return;
@@ -30,6 +37,9 @@ function onSubmitButtonClick(evt) {
           'Sorry, there are no images matching your search query. Please try again.'
         );
       } else {
+        Notiflix.Notify.success(
+          `Hooray! We found ${response.data.totalHits} images.`
+        );
         const pictures = response.data.hits;
         const oneItem = pictures
           .map(picture => createOneCardImage(picture))
@@ -37,6 +47,12 @@ function onSubmitButtonClick(evt) {
         refs.gallery.insertAdjacentHTML('beforeend', oneItem);
         refs.loadButton.classList.remove('is-hidden');
         page += 1;
+      }
+      if (page * perPage > response.data.totalHits) {
+        refs.loadButton.classList.add('is-hidden');
+        Notiflix.Notify.info(
+          'Were sorry, but youve reached the end of search results.'
+        );
       }
     });
   }
