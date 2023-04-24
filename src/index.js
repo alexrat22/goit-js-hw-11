@@ -17,10 +17,10 @@ const refs = {
   loadButton: document.querySelector('.load-more'),
 };
 
+refs.loadButton.classList.add('is-hidden');
+
 refs.form.addEventListener('submit', onSubmitButtonClick);
 refs.loadButton.addEventListener('click', onSubmitButtonClick);
-
-refs.loadButton.classList.add('is-hidden');
 
 function onSubmitButtonClick(evt) {
   evt.preventDefault();
