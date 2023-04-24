@@ -34,6 +34,7 @@ function onSubmitButtonClick(evt) {
   } else {
     getPictures(searchQuery).then(response => {
       if (response.data.hits.length === 0) {
+        refs.loadButton.classList.add('is-hidden');
         Notiflix.Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );
