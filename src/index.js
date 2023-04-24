@@ -3,6 +3,8 @@ import axios from 'axios';
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import { smoothScroll } from './smoothscroll';
+import { createOneCardImage } from './createcard';
 
 const API_KEY = '35639448-d856c19f58ebd88d37f926e40';
 const perPage = 40;
@@ -25,7 +27,6 @@ function onSubmitButtonClick(evt) {
   if (evt.currentTarget.id === 'search-form') {
     page = 1;
     refs.gallery.innerHTML = '';
-    refs.loadButton.classList.add('is-hidden');
   }
   const searchQuery = refs.input.value;
   if (searchQuery.trim() === '') {
@@ -36,23 +37,30 @@ function onSubmitButtonClick(evt) {
         Notiflix.Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );
-      } else {
-        Notiflix.Notify.success(
-          `Hooray! We found ${response.data.totalHits} images.`
-        );
-        const pictures = response.data.hits;
-        const oneItem = pictures
-          .map(picture => createOneCardImage(picture))
-          .join('');
-        refs.gallery.insertAdjacentHTML('beforeend', oneItem);
-        refs.loadButton.classList.remove('is-hidden');
-        page += 1;
-      }
-      if (page * perPage > response.data.totalHits) {
+      } else if (page * perPage > response.data.totalHits) {
         refs.loadButton.classList.add('is-hidden');
         Notiflix.Notify.info(
           'Were sorry, but youve reached the end of search results.'
         );
+      } else if (page === 1) {
+        refs.loadButton.classList.remove('is-hidden');
+        Notiflix.Notify.success(
+          `Hooray! We found ${response.data.totalHits} images.`
+        );
+      }
+
+      const pictures = response.data.hits;
+      const oneItem = pictures
+        .map(picture => createOneCardImage(picture))
+        .join('');
+      refs.gallery.insertAdjacentHTML('beforeend', oneItem);
+      let lightbox = new SimpleLightbox('.gallery a');
+      lightbox.refresh();
+
+      page += 1;
+
+      if (page > 2) {
+        smoothScroll();
       }
     });
   }
@@ -67,28 +75,4 @@ async function getPictures(searchQuery) {
   } catch (error) {
     console.log(error);
   }
-}
-
-function createOneCardImage(picture) {
-  return `<div class="photo-card">
-  <img class="one-photo" src= ${picture.webformatURL}  alt=${picture.tags} loading="lazy" width=300 height=200/>
-  <div class="info">
-    <p class="info-item">
-      <b>Likes</b>
-       ${picture.likes}
-    </p>
-    <p class="info-item">
-      <b>Views</b>
-      ${picture.views}
-    </p>
-    <p class="info-item">
-      <b>Comments</b>
-      ${picture.comments}
-    </p>
-    <p class="info-item">
-      <b>Downloads</b>
-      ${picture.downloads}
-    </p>
-  </div>
-</div>`;
 }
