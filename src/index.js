@@ -1,14 +1,13 @@
 import './css/styles.css';
-import axios from 'axios';
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { smoothScroll } from './smoothscroll';
 import { createOneCardImage } from './createcard';
+import { getPictures } from './getpictures';
 
-const API_KEY = '35639448-d856c19f58ebd88d37f926e40';
 const perPage = 40;
-let page = 1;
+export let page = 1;
 
 const refs = {
   form: document.querySelector('.search-form'),
@@ -53,7 +52,7 @@ function onSubmitButtonClick(evt) {
         .map(picture => createOneCardImage(picture))
         .join('');
       refs.gallery.insertAdjacentHTML('beforeend', oneItem);
-      let lightbox = new SimpleLightbox('.gallery a');
+      const lightbox = new SimpleLightbox('.gallery a');
       lightbox.refresh();
 
       if (page >= 2) {
@@ -61,16 +60,5 @@ function onSubmitButtonClick(evt) {
       }
       page += 1;
     });
-  }
-}
-
-async function getPictures(searchQuery) {
-  try {
-    const response = await axios.get(
-      `https://pixabay.com/api/?key=${API_KEY}&q=${searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${perPage}&page=${page}`
-    );
-    return response;
-  } catch (error) {
-    console.log(error);
   }
 }
