@@ -56,11 +56,10 @@ function onSubmitButtonClick(evt) {
       let lightbox = new SimpleLightbox('.gallery a');
       lightbox.refresh();
 
-      page += 1;
-
-      if (page > 2) {
+      if (page >= 2) {
         smoothScroll();
       }
+      page += 1;
     });
   }
 }
