@@ -48,14 +48,14 @@ function onSubmitButtonClick(evt) {
       }
 
       const pictures = response.data.hits;
-      const oneItem = pictures
-        .map(picture => createOneCardImage(picture))
-        .join('');
-      refs.gallery.insertAdjacentHTML('beforeend', oneItem);
+      refs.gallery.insertAdjacentHTML(
+        'beforeend',
+        pictures.map(createOneCardImage).join('')
+      );
       const lightbox = new SimpleLightbox('.gallery a');
       lightbox.refresh();
 
-      if (page >= 2) {
+      if (page > 1) {
         smoothScroll();
       }
       page += 1;
