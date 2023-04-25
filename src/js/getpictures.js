@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { page } from './index';
+import { page } from '../index';
 
 const API_KEY = '35639448-d856c19f58ebd88d37f926e40';
 const perPage = 40;

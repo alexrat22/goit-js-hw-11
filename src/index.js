@@ -2,9 +2,9 @@ import './css/styles.css';
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import { smoothScroll } from './smoothscroll';
-import { createOneCardImage } from './createcard';
-import { getPictures } from './getpictures';
+import { getPictures } from './js/getpictures';
+import { createOneCardImage } from './js/createcard';
+import { smoothScroll } from './js/smoothscroll';
 
 const perPage = 40;
 export let page = 1;
